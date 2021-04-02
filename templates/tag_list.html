@@ -3,16 +3,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Авторы</li>
+            <li class="breadcrumb-item active" aria-current="page">Тематики</li>
         </ol>
     </nav>
     <div class="quote-content">
-        {% for author in authors %}
+        {% for tag in tags %}
             <article class="quote-post">
-                <a href="{% url 'author_show' author.id %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'tag_show' tag.id %}" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ author.name }}</h5>
-                        <span class="text-muted">{{ author.count_quote }}</span>
+                        <h5 class="mb-1">{{ tag.title }}</h5>
+                        <span class="text-muted">{{ tag.count_quote }}</span>
                     </div>
                 </a>
             </article>

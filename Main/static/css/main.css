@@ -1,5 +1,5 @@
 body {
-    background-color: #eeeeee !important;
+    background-color: #e9ecef!important;
     font-family: "Roboto", sans-serif;
 }
 header.bg-dark {
@@ -23,12 +23,12 @@ header .quote-add {
 main .container {
     padding: 72px 15px 0;
 }
-.quota-content {
+.quote-content {
     margin: auto;
     padding-right: 15px;
     padding-left: 15px;
 }
-.quota-post {
+.quote-post {
     position: relative;
     display: block;
     background-color: white;
@@ -38,7 +38,7 @@ main .container {
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-.quota-post::after {
+.quote-post::after {
     content: "";
     border-radius: 5px;
     position: absolute;
@@ -52,20 +52,20 @@ main .container {
     -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-.quota-post:hover {
+.quote-post:hover {
     -webkit-transform: scale(1.02, 1.02);
     transform: scale(1.02, 1.02);
 }
-.quota-post:hover::after {
+.quote-post:hover::after {
     opacity: 1;
 }
-.quota-text {
+.quote-text {
     margin: 0;
     padding: 54px;
     position: relative;
     text-align: center;
 }
-.quota-text:before, .quota-text:after {
+.quote-text:before, .quote-text:after {
     font-size: 54px;
     color: #46a149;
     position: absolute;
@@ -76,34 +76,36 @@ main .container {
     background: linear-gradient(to right, #46a149 45%, transparent 45%, transparent), linear-gradient(to right, transparent, transparent 55%, #46a149 55%);
     font-family: serif;
 }
-.quota-text:before {
+.quote-text:before {
     content: "\201C";
     top: 30px;
 }
-.quota-text:after {
+.quote-text:after {
     content: "\201D";
     bottom: 30px;
 }
-.quota-author {
+.quote-author {
     float: right;
     position: relative;
     padding-right: 20px;
 }
-.quota-author::before {
+.quote-author a {
+    color: black;
+}
+.quote-author a:hover {
+    color: #46a149;
+}
+.quote-author::before {
     content: "—";
 }
-.quota-tag ul {
+.quote-tag ul {
     list-style: none;
     padding: 20px;
 }
-.quota-tag ul li {
+.quote-tag ul li {
     display: inline;
 }
-.quota-tag ul li a {
-    padding: 4px 8px;
-    border-radius: 10px;
-    border: 1px #46a149 solid;
-    text-decoration: none;
+.quote-tag ul li a {
     color: black;
 }
 footer {

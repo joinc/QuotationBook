@@ -23,13 +23,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {% if quotes %}active{% endif %}">
+                    <li class="nav-item {% if quotes_active %}active{% endif %}">
                         <a class="nav-link" href="{% url 'quote_list' %}">Цитаты</a>
                     </li>
-                    <li class="nav-item {% if subjects %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'subject_list' %}">Тематики</a>
+                    <li class="nav-item {% if tags_active %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'tag_list' %}">Тематики</a>
                     </li>
-                    <li class="nav-item {% if authors %}active{% endif %}">
+                    <li class="nav-item {% if authors_active %}active{% endif %}">
                         <a class="nav-link" href="{% url 'author_list' %}">Авторы</a>
                     </li>
                 </ul>
@@ -46,6 +46,7 @@
             </div>
         </div>
     </header>
+
     <main role="main">
         <div class="container">
             {% block html_main %}{% endblock %}

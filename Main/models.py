@@ -9,6 +9,10 @@ class Tag(models.Model):
         max_length=64,
         default='',
     )
+    count_quote = models.IntegerField(
+        verbose_name='Количество цитат в этой тематике',
+        default=0,
+    )
 
     def __str__(self):
         return '{0}'.format(self.title)
@@ -28,6 +32,10 @@ class Author(models.Model):
         verbose_name='ФИО автора',
         max_length=256,
         default='',
+    )
+    count_quote = models.IntegerField(
+        verbose_name='Количество цитат у автора',
+        default=0,
     )
 
     def __str__(self):
@@ -61,6 +69,13 @@ class Quote(models.Model):
         auto_now_add=True,
         null=True,
     )
+
+    def get_tags(self):
+        """
+        Возвращает запрос к таблице Tag с тематикой для выбранной цитаты
+        :return:
+        """
+        return Tag.objects.filter(TagQuote__quote=self)
 
     def __str__(self):
         return '{0}. {1}...'.format(self.author, self.quote[:40])
