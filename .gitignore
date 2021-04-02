@@ -1,6 +1,5 @@
 .idea/
 venv/
-static/
 Main/__pycache__/
 Main/migrations/
 Main/__init__.py
