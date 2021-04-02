@@ -1,0 +1,28 @@
+body {
+    background-color: #f9f9f9;
+    font-family: "Roboto", sans-serif;
+}
+header.bg-dark {
+    background-color: #123456!important;
+}
+header .navbar-brand {
+    font-family: serif;
+    padding-top: 0;
+    color: #46a149!important;
+}
+header .active {
+    background-color: #46a149;
+}
+header .quote-add {
+    margin-right: 10px;
+}
+main .container {
+    padding: 72px 15px 0;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #eeeeee;
+    text-align: center;
+}
