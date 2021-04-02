@@ -1,0 +1,11 @@
+.idea/
+venv/
+static/
+Main/__pycache__/
+Main/migrations/
+Main/__init__.py
+QuotationBook/__pycache__/
+QuotationBook/__init__.py
+QuotationBook/settings.py
+db.sqlite3
+manage.py
