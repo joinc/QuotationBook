@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from Main.models import Quote, QuoteTag
+from django.db.models.aggregates import Count
+from random import randint
 
 ######################################################################################################################
 
@@ -9,9 +12,14 @@ def index(request):
     :param request: WSGIResponse
     :return: HttpResponse
     """
+    quote_count = Quote.objects.all().aggregate(count=Count('id'))['count']
+    random_index = randint(0, quote_count - 1)
+    quote = Quote.objects.all()[random_index]
     context = {
         'title': 'Главная',
         'quotes': True,
+        'quote': quote,
+        'tags': QuoteTag.objects.filter(quote=quote),
     }
     return render(request=request, template_name='index.html', context=context)
 

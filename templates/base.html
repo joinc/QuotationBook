@@ -4,6 +4,7 @@
 <html lang="ru">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Цитатник - {{ title }}</title>
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/png" />
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
@@ -32,10 +33,11 @@
                         <a class="nav-link" href="{% url 'author_list' %}">Авторы</a>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-outline-success quote-add">
+                <button type="button" class="btn btn-outline-success quote-add" title="Добавить цитату">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
+                    Добавить цитату
                 </button>
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Введите тематику или автора" size="30" aria-label="Search">

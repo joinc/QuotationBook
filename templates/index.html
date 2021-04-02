@@ -1,3 +1,23 @@
 {% extends "base.html" %}{% load static %}
-{% block html_head %}
+{% block html_main %}
+    <div class="py-3 text-center">
+        <h2>Случайная цитата:</h2>
+    </div>
+    <div class="quota-content">
+        <article class="quota-post">
+            <div class="quota-text">
+                {{ quote.quote }}
+            </div>
+            <div class="quota-author">
+                {{ quote.author }}
+            </div>
+            <div class="quota-tag">
+                <ul>
+                    {% for tag in tags %}
+                        <li><a href="#">{{ tag.tag.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </article>
+    </div>
 {% endblock %}
