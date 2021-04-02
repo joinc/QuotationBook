@@ -1,14 +1,18 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from Main.models import Quote, Tag, Author
-from django.db.models.aggregates import Count, Max
+# -*- coding: utf-8 -*-
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.db.models.aggregates import Count
 from random import randint
+from Main.models import Quote, Tag, Author
+from Main.forms import FormCreateQuote
 
 ######################################################################################################################
 
 
 def index(request):
     """
-    Отображение главноей страницы сайта
+    Отображение главноей страницы сайта со случайной цитатой
     :param request: WSGIResponse
     :return: HttpResponse
     """
@@ -76,16 +80,19 @@ def author_list(request):
 ######################################################################################################################
 
 
-def tag_show(request, tag_id):
+def tag_show(request, tag_id: int):
     """
-    Отображает выбранную тематику и цитаты в этой тематике
-    :param request:
-    :param tag_id:
-    :return:
+    Отображает цитаты в выбранной тематике
+    :param request: WSGIResponse
+    :param tag_id: int
+    :return: HttpResponse
     """
     tag = get_object_or_404(Tag, id=tag_id)
     context = {
         'title': tag.title,
+        'breadcrumbs': (
+            ('tag_list', 'Тематики',),
+        ),
         'tags_active': True,
         'tag': tag,
         'quotes': Quote.objects.filter(QuoteTag__tag=tag),
@@ -95,12 +102,42 @@ def tag_show(request, tag_id):
 
 ######################################################################################################################
 
-def author_show(request, author_id):
+
+def author_show(request, author_id: int):
+    """
+    Отображает цитаты выбранного автора
+    :param request: WSGIResponse
+    :param author_id: int
+    :return: HttpResponse
+    """
     author = get_object_or_404(Author, id=author_id)
     context = {
         'title': author.name,
+        'breadcrumbs': (
+            ('author_list', 'Авторы',),
+        ),
         'authors_active': True,
         'author': author,
         'quotes': Quote.objects.filter(author=author),
     }
     return render(request=request, template_name='author_show.html', context=context)
+
+
+######################################################################################################################
+
+
+def quote_create(request):
+    if request.GET:
+        author = request.GET.get('author', '')
+        authors = list(Author.objects.values('id', 'name').filter(name__icontains=author.title()))
+        return JsonResponse({'authors': authors, })
+
+    context = {
+        'title': 'Добавление цитаты',
+        'form_create_quote': FormCreateQuote()
+    }
+
+    return render(request=request, template_name='quote_create.html', context=context, )
+
+
+######################################################################################################################

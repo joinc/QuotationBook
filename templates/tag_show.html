@@ -1,12 +1,5 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'tag_list' %}">Тематики</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
-        </ol>
-    </nav>
     <div class="quote-content">
         {% for quote in quotes %}
             <article class="quote-post">

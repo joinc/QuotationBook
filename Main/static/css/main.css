@@ -10,13 +10,20 @@ header .navbar-brand {
     padding-top: 0;
     color: #46a149!important;
 }
-header .navbar-nav .nav-link {
-    padding-left: 15px;
-    padding-right: 15px;
+header .nav-link {
+    color: rgba(255, 255, 255, 0.7)!important;
+}
+header .nav-link:hover {
+    color: rgba(255, 255, 255, 1)!important;
 }
 header .active {
     background-color: #46a149;
+    color: rgba(255, 255, 255, 1)!important;
 }
+header .active .nav-link {
+    color: rgba(255, 255, 255, 1)!important;
+}
+
 header .quote-add {
     margin-right: 10px;
 }
