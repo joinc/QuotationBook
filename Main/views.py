@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
 from django.db.models.aggregates import Count
 from random import randint
-from Main.models import Quote, Tag, Author
+from Main.models import Quote, Tag, Author, QuoteTag
 from Main.forms import FormAuthor, FormQuote
 
 ######################################################################################################################
@@ -82,7 +82,7 @@ def show_list_author(request):
 
 def show_tag(request, tag_id: int):
     """
-    Отображает цитаты в выбранной тематике
+    Отображение списка цитат в выбранной тематике
     :param request: WSGIResponse
     :param tag_id: int
     :return: HttpResponse
@@ -105,7 +105,7 @@ def show_tag(request, tag_id: int):
 
 def show_author(request, author_id: int):
     """
-    Отображает цитаты выбранного автора
+    Отображение списка цитат выбранного автора
     :param request: WSGIResponse
     :param author_id: int
     :return: HttpResponse
@@ -127,9 +127,15 @@ def show_author(request, author_id: int):
 
 
 def show_quote(request, quote_id: int):
+    """
+    Отображение выбранной цитаты
+    :param request:
+    :param quote_id:
+    :return:
+    """
     quote = get_object_or_404(Quote, id=quote_id)
     context = {
-        'title': str(quote.author.name + '. ' + quote.quote)[:60] + '...',
+        'title': quote,
         'breadcrumbs': (
             ('show_list_quote', 'Цитаты',),
         ),
@@ -157,12 +163,18 @@ def create_quote(request):
             author.save()
             quote = Quote(author=author, quote=request.POST.get('quote', ''),)
             quote.save()
+            for received_tag in list(map(lambda x: x.strip().title(), request.POST.get('tag', '').split(','))):
+                if received_tag:
+                    tag, created = Tag.objects.get_or_create(title=received_tag)
+                    tag.count_quote += 1
+                    tag.save()
+                    quote_tag = QuoteTag(quote=quote, tag=tag, )
+                    quote_tag.save()
+
             messages.success(request, 'Успешно добавлена новая цитата.')
             return redirect(reverse('show_quote', args=(quote.id,)))
         else:
             messages.error(request, 'Не правильно введенные данные')
-            ...
-
     else:
         form_author = FormAuthor()
         form_quote = FormQuote()
@@ -171,8 +183,8 @@ def create_quote(request):
         'form_author': form_author,
         'form_quote': form_quote,
         'list_author': list(Author.objects.all().values_list('name', flat=True)),
+        'list_tag': list(Tag.objects.all().values_list('title', flat=True)),
     }
-
     return render(request=request, template_name='quote/create.html', context=context, )
 
 

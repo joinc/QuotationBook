@@ -18,7 +18,7 @@ class Tag(models.Model):
         return '{0}'.format(self.title)
 
     class Meta:
-        ordering = 'title',
+        ordering = '-count_quote', 'title',
         verbose_name = 'Тематика'
         verbose_name_plural = 'Тематики'
         managed = True
@@ -42,7 +42,7 @@ class Author(models.Model):
         return '{0}'.format(self.name)
 
     class Meta:
-        ordering = 'name',
+        ordering = '-count_quote', 'name',
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
         managed = True
@@ -55,14 +55,13 @@ class Quote(models.Model):
     author = models.ForeignKey(
         Author,
         verbose_name='Автор цитаты',
-        null=True,
-        blank=True,
+        blank=False,
         default=None,
         related_name='Author',
         on_delete=models.CASCADE,
     )
     quote = models.TextField(
-        blank=True,
+        blank=False,
     )
     create_date = models.DateTimeField(
         verbose_name='Дата добавления цитаты',
@@ -78,7 +77,7 @@ class Quote(models.Model):
         return Tag.objects.filter(TagQuote__quote=self)
 
     def __str__(self):
-        return '{0}. {1}...'.format(self.author, self.quote[:40])
+        return '{0}. {1}...'.format(self.author, self.quote[:60])
 
     class Meta:
         ordering = 'author', 'create_date',

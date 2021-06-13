@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load static %}
 {% block html_head %}
-    <script src="{% static 'js/autocomplete.js' %}"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}
 {% block html_main %}
     <div class="quote-content">
@@ -20,16 +21,58 @@
                     {{ form_author.name }}
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 mb-2">
-                    <h6>{{ form_quote.quote.label }}:</h6>
-                    {{ form_quote.quote }}
+            {% for field in form_quote %}
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <h6>{{ field.label }}:</h6>
+                        {{ field }}
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
             <button class="btn btn-success" type="submit">Сохранить</button>
         </form>
     </div>
     <script>
-        autocomplete(document.getElementById("id_name"), {{ list_author | safe }});
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+
+        $( "#id_name" ).on( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            source: {{ list_author | safe }}
+        });
+
+        $( "#id_tag" ).on( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            minLength: 0,
+            source: function( request, response ) {
+                response( $.ui.autocomplete.filter(
+                    {{ list_tag | safe }}, extractLast( request.term ) )
+                );
+            },
+            focus: function() {
+                return false;
+            },
+            select: function( event, ui ) {
+                let terms = split( this.value );
+                terms.pop();
+                terms.push( ui.item.value );
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
     </script>
 {% endblock %}

@@ -27,6 +27,17 @@ class FormAuthor(forms.ModelForm):
 
 
 class FormQuote(forms.ModelForm):
+    tag = forms.CharField(
+        label='Тематики',
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'placeholder': 'Введите тематики цитаты через запятую', }
+        ),
+        required=False,
+    )
+
     class Meta:
         model = Quote
         fields = [

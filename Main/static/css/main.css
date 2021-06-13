@@ -27,6 +27,9 @@ header .active .nav-link {
 header .quote-add {
     margin-right: 10px;
 }
+main {
+    margin-bottom: 72px;
+}
 main .container {
     padding: 72px 15px 0;
 }
@@ -115,31 +118,11 @@ main .container {
 .quote-tag ul li a {
     color: black;
 }
-.autocomplete-items {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  border-bottom: none;
-  border-top: none;
-  z-index: 99;
-  top: 100%;
-  left: 0;
-  right: 0;
-}
-.autocomplete-items div {
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
-}
-.autocomplete-items div:hover {
-  background-color: #e9e9e9;
-}
-.autocomplete-active {
-  background-color: DodgerBlue !important;
-  color: #ffffff;
+.ui-widget.ui-widget-content {
+    background-color: #9fd4ff;
 }
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     background-color: #dddddd;
