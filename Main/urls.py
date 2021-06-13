@@ -3,10 +3,11 @@ from Main import views
 
 urlpatterns = [
     path('', views.index, name='index', ),
-    path('quote/list/', views.quote_list, name='quote_list', ),
-    path('quote/create/', views.quote_create, name='quote_create', ),
-    path('tag/list/', views.tag_list, name='tag_list', ),
-    path('tag/<int:tag_id>/show/', views.tag_show, name='tag_show', ),
-    path('author/list/', views.author_list, name='author_list', ),
-    path('author/<int:author_id>/show/', views.author_show, name='author_show', ),
+    path('quote/list/', views.show_list_quote, name='show_list_quote', ),
+    path('quote/create/', views.create_quote, name='create_quote', ),
+    path('quote/<int:quote_id>/show/', views.show_quote, name='show_quote', ),
+    path('tag/list/', views.show_list_tag, name='show_list_tag', ),
+    path('tag/<int:tag_id>/show/', views.show_tag, name='show_tag', ),
+    path('author/list/', views.show_list_author, name='show_list_author', ),
+    path('author/<int:author_id>/show/', views.show_author, name='show_author', ),
 ]

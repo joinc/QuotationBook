@@ -1,10 +1,15 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
     <div class="quote-content">
-        <article class="quote-post">
-            <div class="py-3 text-center">
-                <h2>Случайная цитата:</h2>
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+        {% endfor %}
+        <article class="quote-post">
             <div class="quote-text">
                 {{ quote.quote }}
             </div>

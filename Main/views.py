@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.contrib import messages
 from django.db.models.aggregates import Count
 from random import randint
 from Main.models import Quote, Tag, Author
-from Main.forms import FormCreateQuote
+from Main.forms import FormAuthor, FormQuote
 
 ######################################################################################################################
 
@@ -29,7 +29,7 @@ def index(request):
 ######################################################################################################################
 
 
-def quote_list(request):
+def show_list_quote(request):
     """
     Отображение списка цитат
     :param request: WSGIResponse
@@ -40,13 +40,13 @@ def quote_list(request):
         'quotes_active': True,
         'quotes': Quote.objects.all(),
     }
-    return render(request=request, template_name='quote_list.html', context=context)
+    return render(request=request, template_name='quote/list.html', context=context)
 
 
 ######################################################################################################################
 
 
-def tag_list(request):
+def show_list_tag(request):
     """
     Отображение списка тематик
     :param request: WSGIResponse
@@ -57,13 +57,13 @@ def tag_list(request):
         'tags_active': True,
         'tags': Tag.objects.all(),
     }
-    return render(request=request, template_name='tag_list.html', context=context)
+    return render(request=request, template_name='tag/list.html', context=context)
 
 
 ######################################################################################################################
 
 
-def author_list(request):
+def show_list_author(request):
     """
     Отображение списка авторов
     :param request: WSGIResponse
@@ -72,15 +72,15 @@ def author_list(request):
     context = {
         'title': 'Авторы',
         'authors_active': True,
-        'authors': Author.objects.all(),
+        'list_author': Author.objects.all(),
     }
-    return render(request=request, template_name='author_list.html', context=context)
+    return render(request=request, template_name='author/list.html', context=context)
 
 
 ######################################################################################################################
 
 
-def tag_show(request, tag_id: int):
+def show_tag(request, tag_id: int):
     """
     Отображает цитаты в выбранной тематике
     :param request: WSGIResponse
@@ -91,19 +91,19 @@ def tag_show(request, tag_id: int):
     context = {
         'title': tag.title,
         'breadcrumbs': (
-            ('tag_list', 'Тематики',),
+            ('show_list_tag', 'Тематики',),
         ),
         'tags_active': True,
         'tag': tag,
         'quotes': Quote.objects.filter(QuoteTag__tag=tag),
     }
-    return render(request=request, template_name='tag_show.html', context=context)
+    return render(request=request, template_name='tag/show.html', context=context)
 
 
 ######################################################################################################################
 
 
-def author_show(request, author_id: int):
+def show_author(request, author_id: int):
     """
     Отображает цитаты выбранного автора
     :param request: WSGIResponse
@@ -114,30 +114,66 @@ def author_show(request, author_id: int):
     context = {
         'title': author.name,
         'breadcrumbs': (
-            ('author_list', 'Авторы',),
+            ('show_list_author', 'Авторы',),
         ),
         'authors_active': True,
         'author': author,
-        'quotes': Quote.objects.filter(author=author),
+        'list_quote': Quote.objects.filter(author=author),
     }
-    return render(request=request, template_name='author_show.html', context=context)
+    return render(request=request, template_name='author/show.html', context=context)
 
 
 ######################################################################################################################
 
 
-def quote_create(request):
-    if request.GET:
-        author = request.GET.get('author', '')
-        authors = list(Author.objects.values('id', 'name').filter(name__icontains=author.title()))
-        return JsonResponse({'authors': authors, })
+def show_quote(request, quote_id: int):
+    quote = get_object_or_404(Quote, id=quote_id)
+    context = {
+        'title': str(quote.author.name + '. ' + quote.quote)[:60] + '...',
+        'breadcrumbs': (
+            ('show_list_quote', 'Цитаты',),
+        ),
+        'quotes_active': True,
+        'quote': quote,
+    }
+    return render(request=request, template_name='quote/show.html', context=context)
 
+
+######################################################################################################################
+
+
+def create_quote(request):
+    """
+    Страница добавления цитаты
+    :param request:
+    :return:
+    """
+    if request.POST:
+        form_author = FormAuthor(request.POST)
+        form_quote = FormQuote(request.POST)
+        if form_author.is_valid() and form_quote.is_valid():
+            author, created = Author.objects.get_or_create(name=request.POST.get('name', ''))
+            author.count_quote += 1
+            author.save()
+            quote = Quote(author=author, quote=request.POST.get('quote', ''),)
+            quote.save()
+            messages.success(request, 'Успешно добавлена новая цитата.')
+            return redirect(reverse('show_quote', args=(quote.id,)))
+        else:
+            messages.error(request, 'Не правильно введенные данные')
+            ...
+
+    else:
+        form_author = FormAuthor()
+        form_quote = FormQuote()
     context = {
         'title': 'Добавление цитаты',
-        'form_create_quote': FormCreateQuote()
+        'form_author': form_author,
+        'form_quote': form_quote,
+        'list_author': list(Author.objects.all().values_list('name', flat=True)),
     }
 
-    return render(request=request, template_name='quote_create.html', context=context, )
+    return render(request=request, template_name='quote/create.html', context=context, )
 
 
 ######################################################################################################################

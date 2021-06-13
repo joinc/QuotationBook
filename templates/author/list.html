@@ -1,12 +1,12 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
     <div class="quote-content">
-        {% for tag in tags %}
+        {% for author in list_author %}
             <article class="quote-post">
-                <a href="{% url 'tag_show' tag.id %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'show_author' author.id %}" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ tag.title }}</h5>
-                        <span class="text-muted">{{ tag.count_quote }}</span>
+                        <h5 class="mb-1">{{ author.name }}</h5>
+                        <span class="text-muted">{{ author.count_quote }}</span>
                     </div>
                 </a>
             </article>

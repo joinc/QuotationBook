@@ -7,13 +7,13 @@
                     {{ quote.quote }}
                 </div>
                 <div class="quote-author">
-                    <a href="{% url 'author_show' quote.author.id %}">{{ quote.author }}</a>
+                    <a href="{% url 'show_author' quote.author.id %}">{{ quote.author }}</a>
                 </div>
                 <div class="quote-tag">
                     <ul>
                         {% for tag in quote.get_tags %}
                             <li>
-                                <a href="{% url 'tag_show' tag.id %}" class="btn btn-outline-success" role="button" aria-pressed="true">{{ tag.title }}</a>
+                                <a href="{% url 'show_tag' tag.id %}" class="btn btn-outline-success" role="button" aria-pressed="true">{{ tag.title }}</a>
                             </li>
                         {% endfor %}
                     </ul>
