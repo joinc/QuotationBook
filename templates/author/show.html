@@ -2,23 +2,7 @@
 {% block html_main %}
     <div class="quote-content">
         {% for quote in list_quote %}
-            <article class="quote-post">
-                <div class="quote-text">
-                    {{ quote.quote }}
-                </div>
-                <div class="quote-author">
-                    <a href="{% url 'show_author' quote.author.id %}">{{ quote.author }}</a>
-                </div>
-                <div class="quote-tag">
-                    <ul>
-                        {% for tag in quote.get_tags %}
-                            <li>
-                                <a href="{% url 'show_tag' tag.id %}" class="btn btn-outline-success" role="button" aria-pressed="true">{{ tag.title }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
+            {% include "quote/quote.html" %}
         {% endfor %}
     </div>
 {% endblock %}

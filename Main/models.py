@@ -4,6 +4,9 @@ from django.db import models
 
 
 class Tag(models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
     title = models.CharField(
         verbose_name='Название тематики',
         max_length=64,
@@ -28,6 +31,9 @@ class Tag(models.Model):
 
 
 class Author(models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
     name = models.CharField(
         verbose_name='ФИО автора',
         max_length=256,
@@ -52,6 +58,9 @@ class Author(models.Model):
 
 
 class Quote(models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
     author = models.ForeignKey(
         Author,
         verbose_name='Автор цитаты',
@@ -89,6 +98,9 @@ class Quote(models.Model):
 
 
 class QuoteTag(models.Model):
+    id = models.AutoField(
+        primary_key=True
+    )
     quote = models.ForeignKey(
         Quote,
         verbose_name='Цитата',

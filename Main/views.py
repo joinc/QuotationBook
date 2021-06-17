@@ -7,6 +7,7 @@ from random import randint
 from Main.models import Quote, Tag, Author, QuoteTag
 from Main.forms import FormAuthor, FormQuote
 
+
 ######################################################################################################################
 
 
@@ -148,6 +149,74 @@ def show_quote(request, quote_id: int):
 ######################################################################################################################
 
 
+def search_quote(request):
+    if request.POST:
+        search_query = request.POST['search']
+        list_search_id_quote = list(
+            set(
+                list(Quote.objects.filter(author__name__icontains=search_query).values_list('id', flat=True)) +
+                list(Quote.objects.filter(quote__icontains=search_query).values_list('id', flat=True)) +
+                list(QuoteTag.objects.filter(tag__title__icontains=search_query).values_list('quote', flat=True))
+            )
+        )
+        list_search_quote = Quote.objects.filter(id__in=list_search_id_quote)
+        count_search_quote = len(list_search_quote)
+        if count_search_quote > 0:
+            messages.info(
+                request,
+                'При поиске "{0}" найдено цитат - {1}.'.format(
+                    search_query,
+                    count_search_quote,
+                ),
+            )
+        else:
+            messages.info(
+                request,
+                'При поиске "{0}" не найдено ни одного совпадения'.format(
+                    search_query,
+                ),
+            )
+    else:
+        list_search_quote = []
+        messages.info(
+            request,
+            'Для поиска цитат введите запрос и нажмите кнопку "Искать".'
+        )
+    context = {
+        'title': 'Результаты поиска',
+        'quotes_active': False,
+        'quotes': list_search_quote,
+        'search': search_query,
+    }
+    return render(request=request, template_name='quote/list.html', context=context)
+    # if request.POST:
+    #     search_form = FormSearch(request.POST)
+    #     if search_form.is_valid():
+    #         messages.info(
+    #             request,
+    #             'Найдено работодателей из Катарсиса - {0}. Отображается - {1}.'.format(
+    #                 len(list_temp_employer),
+    #                 len(list_employer),
+    #             )
+    #         )
+    #     else:
+    #         return redirect(reverse('employer_temp_list'))
+    # elif request.GET:
+    #     id_temp_employer = int(request.GET.get('id', 0))
+    #     temp_employer = get_object_or_404(TempEmployer, id=id_temp_employer)
+    #     list_existent_employer = Employer.objects.filter(INN=temp_employer.INN)
+    #     return render(
+    #         request=request,
+    #         template_name='temp_employer/modal.html',
+    #         context={'temp_employer': temp_employer, 'list_existent_employer': list_existent_employer, }
+    #     )
+    # else:
+    #     search_form = FormSearch()
+
+
+######################################################################################################################
+
+
 def create_quote(request):
     """
     Страница добавления цитаты
@@ -161,7 +230,7 @@ def create_quote(request):
             author, created = Author.objects.get_or_create(name=request.POST.get('name', ''))
             author.count_quote += 1
             author.save()
-            quote = Quote(author=author, quote=request.POST.get('quote', ''),)
+            quote = Quote(author=author, quote=request.POST.get('quote', ''), )
             quote.save()
             for received_tag in list(map(lambda x: x.strip().title(), request.POST.get('tag', '').split(','))):
                 if received_tag:
@@ -170,7 +239,6 @@ def create_quote(request):
                     tag.save()
                     quote_tag = QuoteTag(quote=quote, tag=tag, )
                     quote_tag.save()
-
             messages.success(request, 'Успешно добавлена новая цитата.')
             return redirect(reverse('show_quote', args=(quote.id,)))
         else:
@@ -186,6 +254,5 @@ def create_quote(request):
         'list_tag': list(Tag.objects.all().values_list('title', flat=True)),
     }
     return render(request=request, template_name='quote/create.html', context=context, )
-
 
 ######################################################################################################################

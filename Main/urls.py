@@ -3,6 +3,7 @@ from Main import views
 
 urlpatterns = [
     path('', views.index, name='index', ),
+    path('search/', views.search_quote, name='search', ),
     path('quote/list/', views.show_list_quote, name='show_list_quote', ),
     path('quote/create/', views.create_quote, name='create_quote', ),
     path('quote/<int:quote_id>/show/', views.show_quote, name='show_quote', ),

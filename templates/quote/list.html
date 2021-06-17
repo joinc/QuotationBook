@@ -1,24 +1,16 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
     <div class="quote-content">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
         {% for quote in quotes %}
-            <article class="quote-post">
-                <div class="quote-text">
-                    {{ quote.quote }}
-                </div>
-                <div class="quote-author">
-                    <a href="{% url 'show_author' quote.author.id %}">{{ quote.author }}</a>
-                </div>
-                <div class="quote-tag">
-                    <ul>
-                        {% for tag in quote.get_tags %}
-                            <li>
-                                <a href="{% url 'show_tag' tag.id %}" class="btn btn-outline-success" role="button" aria-pressed="true">{{ tag.title }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
+            {% include "quote/quote.html" %}
         {% endfor %}
     </div>
 {% endblock %}

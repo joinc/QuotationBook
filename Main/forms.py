@@ -35,7 +35,7 @@ class FormQuote(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Введите тематики цитаты через запятую', }
         ),
-        required=False,
+        required=True,
     )
 
     class Meta:

@@ -108,9 +108,14 @@ main .container {
 .quote-author::before {
     content: "—";
 }
+.quote-share {
+    float: right;
+    position: relative;
+    padding: 7px 20px;
+}
 .quote-tag ul {
     list-style: none;
-    padding: 20px;
+    padding: 0 20px;
 }
 .quote-tag ul li {
     display: inline;

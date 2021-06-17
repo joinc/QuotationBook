@@ -1,25 +1,9 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
+    <div class="py-3 text-center">
+        <h4>Случайная цитата:</h4>
+    </div>
     <div class="quote-content">
-        <article class="quote-post">
-            <div class="py-3 text-center">
-                <h2>Случайная цитата:</h2>
-            </div>
-            <div class="quote-text">
-                {{ quote.quote }}
-            </div>
-            <div class="quote-author">
-                <a href="{% url 'show_author' quote.author.id %}">{{ quote.author }}</a>
-            </div>
-            <div class="quote-tag">
-                <ul>
-                    {% for tag in quote.get_tags %}
-                        <li>
-                            <a href="{% url 'show_tag' tag.id %}" class="btn btn-outline-success" role="button" aria-pressed="true">{{ tag.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </article>
+        {% include "quote/quote.html" %}
     </div>
 {% endblock %}
