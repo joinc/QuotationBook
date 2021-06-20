@@ -1,9 +1,5 @@
-from django.views.generic.base import TemplateView
 from django.urls import path
 from Main import views
-
-handler403 = 'Main.views.handler403'
-handler404 = 'Main.views.handler404'
 
 urlpatterns = [
     path('', views.index, name='index', ),
@@ -17,5 +13,4 @@ urlpatterns = [
     path('author/<int:author_id>/show/', views.show_author, name='show_author', ),
     path('403/', views.handler403, name='403', ),
     path('404/', views.handler404, name='404', ),
-    path('robotx.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),),
 ]
