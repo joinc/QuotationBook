@@ -1,4 +1,4 @@
-            <article class="quote-post">
+            <div class="quote-post">
                 <div class="quote-text">
                     {{ quote.quote }}
                 </div>
@@ -24,8 +24,8 @@
                     </div>
                     <div class="col-auto mr-0 text-right">
                         <div class="quote-share">
-                            <div class="ya-share2" data-curtain data-limit="0" data-more-button-type="short" data-popup-position="outer" data-services="vkontakte,facebook,odnoklassniki,telegram,twitter" data-title="{{ quote }}" data-url="{{ request.META.HTTP_HOST }}{% url 'show_quote' quote.id %}"></div>
+                            <div class="ya-share2" data-curtain data-limit="0" data-more-button-type="short" data-popup-position="outer" data-services="vkontakte,facebook,telegram,twitter" data-description="Цитатник. Цитата - {{ quote }}" data-title="{{ quote }}" data-url="https://{{ request.META.HTTP_HOST }}{% url 'show_quote' quote.id %}"></div>
                         </div>
                     </div>
                 </div>
-            </article>
+            </div>

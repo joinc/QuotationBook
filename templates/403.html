@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load static %}
+{% block html_main %}
+    <div class="py-3 text-center">
+        <h1 style="font-size: 120px;">403</h1>
+        <h4>К сожалению, в доступе отказано.</h4>
+        Возможно, Вы хотите выполнить запрос, для которого у Вас не достаточно прав.<br>
+        Вы можете <a href="{% url 'index' %}">вернуться на главную страницу</a>
+    </div>
+{% endblock %}

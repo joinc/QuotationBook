@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load static %}
 {% block html_main %}
     <div class="quote-content">
-        {% for quote in quotes %}
+        {% for quote in list_quote %}
             {% include "quote/quote.html" %}
         {% endfor %}
     </div>

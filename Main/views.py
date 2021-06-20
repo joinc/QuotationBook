@@ -22,6 +22,8 @@ def index(request):
     quote = Quote.objects.all()[random_index]
     context = {
         'title': 'Главная',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат. Случайная цитата',
         'quote': quote,
     }
     return render(request=request, template_name='index.html', context=context)
@@ -38,6 +40,8 @@ def show_list_quote(request):
     """
     context = {
         'title': 'Цитаты',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат. Список цитат',
         'quotes_active': True,
         'quotes': Quote.objects.all(),
     }
@@ -55,8 +59,10 @@ def show_list_tag(request):
     """
     context = {
         'title': 'Тематики',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат. Список тематик цитат',
         'tags_active': True,
-        'tags': Tag.objects.all(),
+        'list_tag': Tag.objects.all(),
     }
     return render(request=request, template_name='tag/list.html', context=context)
 
@@ -72,6 +78,8 @@ def show_list_author(request):
     """
     context = {
         'title': 'Авторы',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат. Список авторов цитат',
         'authors_active': True,
         'list_author': Author.objects.all(),
     }
@@ -91,12 +99,14 @@ def show_tag(request, tag_id: int):
     tag = get_object_or_404(Tag, id=tag_id)
     context = {
         'title': tag.title,
+        'keywords': 'цитатник, цитаты, {0}'.format(tag),
+        'description': 'Цитатник различных цитат. Список цитат тематики {0}'.format(tag),
         'breadcrumbs': (
             ('show_list_tag', 'Тематики',),
         ),
         'tags_active': True,
         'tag': tag,
-        'quotes': Quote.objects.filter(QuoteTag__tag=tag),
+        'list_quote': Quote.objects.filter(QuoteTag__tag=tag),
     }
     return render(request=request, template_name='tag/show.html', context=context)
 
@@ -114,6 +124,8 @@ def show_author(request, author_id: int):
     author = get_object_or_404(Author, id=author_id)
     context = {
         'title': author.name,
+        'keywords': 'цитатник, цитаты, {0}'.format(author),
+        'description': 'Цитатник различных цитат. Список цитат автора {0}'.format(author),
         'breadcrumbs': (
             ('show_list_author', 'Авторы',),
         ),
@@ -137,6 +149,8 @@ def show_quote(request, quote_id: int):
     quote = get_object_or_404(Quote, id=quote_id)
     context = {
         'title': quote,
+        'keywords': 'цитатник, цитаты, {0}'.format(quote.author),
+        'description': 'Цитатник различных цитат. Цитата автора {0}'.format(quote.author),
         'breadcrumbs': (
             ('show_list_quote', 'Цитаты',),
         ),
@@ -150,68 +164,43 @@ def show_quote(request, quote_id: int):
 
 
 def search_quote(request):
+    """
+    Поиск по введеному запросу цитат, поиск среди автора, текста и тематики цитаты
+    :param request:
+    :return:
+    """
+    search_query = ''
+    list_search_quote = []
     if request.POST:
-        search_query = request.POST['search']
-        list_search_id_quote = list(
-            set(
-                list(Quote.objects.filter(author__name__icontains=search_query).values_list('id', flat=True)) +
-                list(Quote.objects.filter(quote__icontains=search_query).values_list('id', flat=True)) +
-                list(QuoteTag.objects.filter(tag__title__icontains=search_query).values_list('quote', flat=True))
+        search_query = request.POST.get('search', '')
+        if search_query:
+            list_search_id_quote = list(
+                set(
+                    list(Quote.objects.filter(author__name__icontains=search_query).values_list('id', flat=True)) +
+                    list(Quote.objects.filter(quote__icontains=search_query).values_list('id', flat=True)) +
+                    list(QuoteTag.objects.filter(tag__title__icontains=search_query).values_list('quote', flat=True))
+                )
             )
-        )
-        list_search_quote = Quote.objects.filter(id__in=list_search_id_quote)
-        count_search_quote = len(list_search_quote)
-        if count_search_quote > 0:
-            messages.info(
-                request,
-                'При поиске "{0}" найдено цитат - {1}.'.format(
-                    search_query,
-                    count_search_quote,
-                ),
-            )
+            list_search_quote = Quote.objects.filter(id__in=list_search_id_quote)
+            count_search_quote = len(list_search_quote)
+            if count_search_quote > 0:
+                message_text = 'При поиске "{0}" найдено цитат - {1}.'.format(search_query, count_search_quote, )
+            else:
+                message_text = 'При поиске "{0}" не найдено ни одного совпадения'.format(search_query, )
         else:
-            messages.info(
-                request,
-                'При поиске "{0}" не найдено ни одного совпадения'.format(
-                    search_query,
-                ),
-            )
+            message_text = 'Для поиска цитат введите запрос и нажмите кнопку "Искать".'
     else:
-        list_search_quote = []
-        messages.info(
-            request,
-            'Для поиска цитат введите запрос и нажмите кнопку "Искать".'
-        )
+        message_text = 'Для поиска цитат введите запрос и нажмите кнопку "Искать".'
+    messages.info(request, message_text)
     context = {
         'title': 'Результаты поиска',
+        'keywords': 'цитатник, цитаты, поиск цитат',
+        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик. Результаты поиска',
         'quotes_active': False,
         'quotes': list_search_quote,
         'search': search_query,
     }
     return render(request=request, template_name='quote/list.html', context=context)
-    # if request.POST:
-    #     search_form = FormSearch(request.POST)
-    #     if search_form.is_valid():
-    #         messages.info(
-    #             request,
-    #             'Найдено работодателей из Катарсиса - {0}. Отображается - {1}.'.format(
-    #                 len(list_temp_employer),
-    #                 len(list_employer),
-    #             )
-    #         )
-    #     else:
-    #         return redirect(reverse('employer_temp_list'))
-    # elif request.GET:
-    #     id_temp_employer = int(request.GET.get('id', 0))
-    #     temp_employer = get_object_or_404(TempEmployer, id=id_temp_employer)
-    #     list_existent_employer = Employer.objects.filter(INN=temp_employer.INN)
-    #     return render(
-    #         request=request,
-    #         template_name='temp_employer/modal.html',
-    #         context={'temp_employer': temp_employer, 'list_existent_employer': list_existent_employer, }
-    #     )
-    # else:
-    #     search_form = FormSearch()
 
 
 ######################################################################################################################
@@ -248,11 +237,38 @@ def create_quote(request):
         form_quote = FormQuote()
     context = {
         'title': 'Добавление цитаты',
+        'keywords': 'цитатник, цитаты, добавить цитату',
+        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик',
         'form_author': form_author,
         'form_quote': form_quote,
         'list_author': list(Author.objects.all().values_list('name', flat=True)),
         'list_tag': list(Tag.objects.all().values_list('title', flat=True)),
     }
     return render(request=request, template_name='quote/create.html', context=context, )
+
+
+######################################################################################################################
+
+
+def handler403(request, *args, **argv):
+    context = {
+        'title': 'Ошибка 403',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик',
+    }
+    return render(request=request, template_name='403.html', context=context, )
+
+
+######################################################################################################################
+
+
+def handler404(request, *args, **argv):
+    context = {
+        'title': 'Ошибка 404',
+        'keywords': 'цитатник, цитаты',
+        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик',
+    }
+    return render(request=request, template_name='404.html', context=context, )
+
 
 ######################################################################################################################
