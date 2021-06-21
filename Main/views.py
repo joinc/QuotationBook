@@ -3,6 +3,7 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
 from django.db.models.aggregates import Count
+from django.utils.html import strip_tags as st
 from random import randint
 from Main.models import Quote, Tag, Author, QuoteTag
 from Main.forms import FormAuthor, FormQuote
@@ -195,7 +196,8 @@ def search_quote(request):
     context = {
         'title': 'Результаты поиска',
         'keywords': 'цитатник, цитаты, поиск цитат',
-        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик. Результаты поиска',
+        'description': 'Цитатник различных цитат, поиск и просмотр цитат различных авторов и тематик. '
+                       'Результаты поиска',
         'quotes_active': False,
         'quotes': list_search_quote,
         'search': search_query,
@@ -216,12 +218,13 @@ def create_quote(request):
         form_author = FormAuthor(request.POST)
         form_quote = FormQuote(request.POST)
         if form_author.is_valid() and form_quote.is_valid():
-            author, created = Author.objects.get_or_create(name=request.POST.get('name', ''))
+
+            author, created = Author.objects.get_or_create(name=st(request.POST.get('name', '')))
             author.count_quote += 1
             author.save()
-            quote = Quote(author=author, quote=request.POST.get('quote', ''), )
+            quote = Quote(author=author, quote=st(request.POST.get('quote', '')), )
             quote.save()
-            for received_tag in list(map(lambda x: x.strip().title(), request.POST.get('tag', '').split(','))):
+            for received_tag in list(map(lambda x: x.strip().title(), st(request.POST.get('tag', '')).split(','))):
                 if received_tag:
                     tag, created = Tag.objects.get_or_create(title=received_tag)
                     tag.count_quote += 1
@@ -250,7 +253,7 @@ def create_quote(request):
 ######################################################################################################################
 
 
-def handler403(request, *args, **argv):
+def handler403(request, *args):
     context = {
         'title': 'Ошибка 403',
         'keywords': 'цитатник, цитаты',
@@ -262,7 +265,7 @@ def handler403(request, *args, **argv):
 ######################################################################################################################
 
 
-def handler404(request, *args, **argv):
+def handler404(request, *args):
     context = {
         'title': 'Ошибка 404',
         'keywords': 'цитатник, цитаты',

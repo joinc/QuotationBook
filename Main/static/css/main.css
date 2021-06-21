@@ -126,6 +126,10 @@ main .container {
 .ui-widget.ui-widget-content {
     background-color: #9fd4ff;
 }
+.highlight {
+    text-decoration: underline dotted red;
+    display:inline;
+}
 footer {
     position: fixed;
     bottom: 0;
